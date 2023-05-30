@@ -15,8 +15,6 @@ public:
 	static int ydcount(int year, int month);		// 获取每一个月的天数
 	long double getgpst(char c);					// 计算 GPS 周或 周内秒
 	void wdata();						// 输出计算结果
-	void lglrchazhi(string path2, string path3);
-	long double gpsTime(int year, int month, int day, int hour, int minute, int second);//将得到的时间转化为	GPS秒
 	string gpsSeconds2Time(long long gpsSeconds);//将GPStime 转化为年月日
 
 private:
@@ -80,4 +78,9 @@ private:
 	long double IDOC;	// 星钟的数据龄期
 	long double s_time;	// 电文发送时刻
 	long double f_val;	// 拟合区间
+	void lglrchazhi(string path2, string path3);//对卫星坐标数据进行插值处理
+	double lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi);//拉格朗日插值算法
+	vector<pair<int, int>> groupByWx_name(const vector<vector<string>>& data);//将得到的数据进行分组
+	vector<long int> chazhi_gpstime(struct tm&, int jiange_miao=900);//根据给出的日期和间隔时间生成插值gps周内秒，默认间隔时间为900秒（15分钟）
+
 };

@@ -70,7 +70,6 @@ Satellites::Satellites(string path1, string path2, string path3)
 		this->hour = vt[i][3];
 		this->min = vt[i][4];
 		this->second = vt[i][5];
-
 		this->af0 = vt[i][6];
 		this->af1 = vt[i][7];
 		this->af2 = vt[i][8];
@@ -169,9 +168,6 @@ void Satellites::calData()
 }
 
 
-
-// c = 'w' 则返回 gps 周， c = 's' 则返回 gpa 周内秒，默认返回周内秒
-
 // 将数据写入文件
 void Satellites::wdata()
 {
@@ -209,6 +205,8 @@ int Satellites::ydcount(int year, int month)
 	return count;
 
 }
+
+// c = 'w' 则返回 gps 周， c = 's' 则返回 gpa 周内秒，默认返回周内秒
 long double Satellites::getgpst(char c = 's')
 {
 	if (c != 'w' && c != 's') return -1;											// 若传递的参数不正确，则返回-1
@@ -237,6 +235,20 @@ string Satellites:: gpsSeconds2Time(long long gpsSeconds)
 	return timeStr;
 }
 
+vector<long int> Satellites::chazhi_gpstime(struct tm& jiesuan_date,int seconds) {
+	vector<long int> gpstime;//
+	time_t utc_time;
+	utc_time = mktime(&jiesuan_date);
+	cout << "utc " << utc_time << endl;
+
+	for (int i = 0; i < (86400 / seconds); i++) {
+		gpstime.push_back((utc_time - 315964800) % 604800);
+		utc_time += seconds;
+	}
+	for (const auto& col : gpstime) {
+   		cout << col << " ";
+		}	return gpstime;
+}
 
 
 // 以逗号为分隔符，将一行数据解析为一个vector<string>
@@ -264,9 +276,61 @@ vector<vector<string>> readCSV(const string& filename) {
 	return result;
 }
 
+vector<pair<int, int>> Satellites:: groupByWx_name(const vector<vector<string>>& data) {
+	vector<vector<string>> sortedData = data;
+	sort(sortedData.begin(), sortedData.end(), [](const vector<string>& a, const vector<string>& b) { return a[0] < b[0]; });
+
+	string currentKey = "";
+	int start = 0, end = 0;
+	vector<pair<int, int>> result;
+
+	for (int i = 0; i < sortedData.size(); ++i) {
+		if (sortedData[i][0] != currentKey) {
+			if (!currentKey.empty()) {
+				result.push_back(make_pair(start, end - 1));
+			}
+			currentKey = sortedData[i][0];
+			start = i;
+		}
+		end = i + 1;
+	}
+
+	if (!currentKey.empty()) {
+		result.push_back(make_pair(start, end - 1));
+	}
+
+	return result;
+}
+
+
+
+
+double Satellites:: lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi) {
+	if (x.size() != y.size()) {
+		cout << "x 和 y 的长度不相等！" << endl;
+		return NAN;
+	}
+
+	int n = x.size();
+	double yi = 0.0;
+
+	for (int i = 0; i < n; ++i) {
+		double li = 1.0;
+
+		for (int j = 0; j < n; ++j) {
+			if (i != j) {
+				li *= (xi - x[j]) / (x[i] - x[j]);
+			}
+		}
+
+		yi += y[i] * li;
+	}
+
+	return yi;
+};
 
 //对坐标进行每隔15分钟的线性插值
-void Satellites::lglrchazhi(string path2,string path3)
+void Satellites::lglrchazhi(string path2, string path3)
 {
 	vector<vector<string>> data = readCSV(path2);//读入已知数据   data为所有数据
 	//for (auto row : data) {
@@ -278,54 +342,59 @@ void Satellites::lglrchazhi(string path2,string path3)
 	vector<vector<string>> Weixing_jiesuan;     //筛选出要算的数据
 	for (int i = 1; i < data.size(); i++) { // 从第二行开始遍历   
 		vector<string> newRow;
-		newRow.push_back(data[i][0]); // 第一列
-		newRow.push_back(data[i][1]); // 第二列
-		newRow.push_back(data[i][17]); // 第18列
-		newRow.push_back(data[i][18]); // 第19列
-		newRow.push_back(data[i][19]); // 第20列
+		newRow.push_back(data[i][0]); // prn
+		newRow.push_back(data[i][1]); // gps周内秒
+		newRow.push_back(data[i][17]); // x
+		newRow.push_back(data[i][18]); // y
+		newRow.push_back(data[i][19]); // z
 		Weixing_jiesuan.push_back(newRow);
 	}
 
 	// 拉格朗日线性插值
-	double x, y;
-	vector<vector<string>> WX_cz;     //
+	vector<vector<string>> WX_cz;     //插值后数据
 
-	for (int i = 2; i < Weixing_jiesuan.size(); i++) {
-		string name1 = Weixing_jiesuan[i - 1][0], name2 = Weixing_jiesuan[i][0];
-		//cout << "weixingming1 " << name1 << "weixingming2 " << name2 << endl;
-		if (name1==name2)
-		{//同一个卫星才进行插值操作
-			double x1 = stod(Weixing_jiesuan[i - 1][1]), x2 = stod(Weixing_jiesuan[i][1]);//线性插值间隔
-			double X1 = stod(Weixing_jiesuan[i - 1][2]), X2 = stod(Weixing_jiesuan[i][2]);//获得间隔坐标值
-			double Y1 = stod(Weixing_jiesuan[i - 1][3]), Y2 = stod(Weixing_jiesuan[i][3]);
-			double Z1 = stod(Weixing_jiesuan[i - 1][4]), Z2 = stod(Weixing_jiesuan[i][4]);
-			for (double j = x1; j < x2; j += 900) { // 每隔900秒进行插值
-				double k = (j - x1) / (x2 - x1);
-				double X = X1 * (1 - k) + X2 * k;   //插值坐标
-				double Y = Y1 * (1 - k) + Y2 * k;
-				double Z = Z1 * (1 - k) + Z2 * k;
-				//cout << name1 << " shijian" << j << " zuobiao  " << X << " " << Y << " " << endl;
+	tm jiesuan_date = {};//定义解算日期
+	jiesuan_date.tm_year = 2022-1900;
+	jiesuan_date.tm_mon = 1;
+	jiesuan_date.tm_mday = 25;
+	jiesuan_date.tm_hour = 0;
+	jiesuan_date.tm_min = 0;
+	jiesuan_date.tm_sec = 0;
+	time_t utc_time;
+	utc_time = mktime(&jiesuan_date);
+	cout << "utc " << utc_time << endl;
 
-				//依据GPS秒转换年月日存储，增加可读性
+	vector<long int> chazhi_time = this->chazhi_gpstime(jiesuan_date,900);//获得解算区间
 
-				vector<string> newRow2;
-				newRow2.push_back(name1);
-				cout << "time " << gpsSeconds2Time(j)<<endl;
-				newRow2.push_back(gpsSeconds2Time(j));
-				newRow2.push_back(to_string(j));
-				newRow2.push_back(to_string(X));
-				newRow2.push_back(to_string(Y));
-				newRow2.push_back(to_string(Z));
-				WX_cz.push_back(newRow2);
-				i++;
 
-			}
+	vector<pair<int, int>> quyu = groupByWx_name(Weixing_jiesuan);
+	for (int i = 0; i < quyu.size(); i++) {
+		vector<double> X;
+		vector<double> Yx;
+		vector<double> Yy;
+		vector<double> Yz;
+
+		for (int j = 0; j < quyu[i].second - quyu[i].first; j++) {
+			X.push_back(stod(Weixing_jiesuan[quyu[i].first + j][1]));
+			Yx.push_back(stod(Weixing_jiesuan[quyu[i].first + j][2]));
+			Yy.push_back(stod(Weixing_jiesuan[quyu[i].first + j][3]));
+			Yz.push_back(stod(Weixing_jiesuan[quyu[i].first + j][4]));
+		}
+		for (int k = 0; k < chazhi_time.size(); k++) {
+			vector<string>suanzhi;
+			suanzhi.push_back(Weixing_jiesuan[quyu[i].first][0]);//卫星名称
+			suanzhi.push_back(gpsSeconds2Time(chazhi_time[k]));
+			suanzhi.push_back(to_string(chazhi_time[k]));//gpsshijian
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yx, chazhi_time[k])));//三个坐标
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yy, chazhi_time[k])));
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yz, chazhi_time[k])));
+			WX_cz.push_back(suanzhi);
 		}
 
-	}
-		//将结果存入文件
+
+
 		ofstream out(path3);
-		out << "prn" << "," <<"time"<<"," << "gpstime" << "," << "X" << "," << "Y" << "," << "Z" << endl;
+		out << "prn" << "," << "time" << "," << "gpstime" << "," << "X" << "," << "Y" << "," << "Z" << endl;
 		for (auto row : WX_cz) {
 			for (auto cell : row) {
 				out << cell << ",";
@@ -334,7 +403,6 @@ void Satellites::lglrchazhi(string path2,string path3)
 		}
 		out.close();
 
-		cout << "已将排序后的结果保存在"<<path3<<" 文件中。" << endl;
 
 		//for (const auto& row : WX_cz) {
 		//	for (const auto& col : row) {
@@ -342,7 +410,7 @@ void Satellites::lglrchazhi(string path2,string path3)
 		//	}
 		//	cout << endl;
 		//}
+	}
+		cout << "已将排序后的结果保存在" << path3 << " 文件中。" << endl;
 
-		//
-
-}
+	}
