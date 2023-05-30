@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <vector>
 #include <fstream>
 #include <cmath>
@@ -11,76 +11,76 @@ public:
 	Satellites(string path, string path2, string path3);
 	~Satellites();
 	void calData();
-	static int ydcount(int year);					// »ñÈ¡Ã¿Ò»ÄêµÄÌìÊı
-	static int ydcount(int year, int month);		// »ñÈ¡Ã¿Ò»¸öÔÂµÄÌìÊı
-	long double getgpst(char c);					// ¼ÆËã GPS ÖÜ»ò ÖÜÄÚÃë
-	void wdata();						// Êä³ö¼ÆËã½á¹û
-	string gpsSeconds2Time(long long gpsSeconds);//½«GPStime ×ª»¯ÎªÄêÔÂÈÕ
+	static int ydcount(int year);					// è·å–æ¯ä¸€å¹´çš„å¤©æ•°
+	static int ydcount(int year, int month);		// è·å–æ¯ä¸€ä¸ªæœˆçš„å¤©æ•°
+	long double getgpst(char c);					// è®¡ç®— GPS å‘¨æˆ– å‘¨å†…ç§’
+	void wdata();						// è¾“å‡ºè®¡ç®—ç»“æœ
+	string gpsSeconds2Time(long long gpsSeconds);//å°†GPStime è½¬åŒ–ä¸ºå¹´æœˆæ—¥
 
 private:
-	long double n;//n Æ½¾ù½ÇËÙ¶È
-	long double tk;//¹é»¯Ê±¼ä
-	long double mk;//ÎÀĞÇÆ½½üµã½Ç
-	long double ek; //Æ«½üµã½Ç
-	long double vk;//Õæ½üµã½Ç
-	long double pa;//Éı½»¾à½Ç
-	long double cu;//Éã¶¯¸ÄÕıÏîÉı½»¾à½Ç
-	long double cr;//Éã¶¯¸ÄÕıÏîÎÀĞÇÏò¾¶
-	long double ci;//Éã¶¯¸ÄÕıÏîÎÀĞÇ¹ìµÀÇã½Ç
-	long double uk;//¸ÄÕıºóÉı½»¾à½Ç
-	long double rk;//¸ÄÕıºóÎÀĞÇÏò¾¶
-	long double ik;//¸ÄÕıºóÎÀĞÇ¹ìµÀÇã½Ç
-    long double xk;//Æ½ÃæÖ±½Ç×ø±êÏµÖĞµÄ×ø±êx
-	long double yk;//Æ½ÃæÖ±½Ç×ø±êÏµÖĞµÄ×ø±êy
-	long double dk;//Éı½»µã¾­¶È¼ÆËã
-	long double Xk;//µØĞÄ×ø±êÏµx
-	long double Yk;//µØĞÄ×ø±êÏµy
-	long double Zk;//µØĞÄ×ø±êÏµz
-	long double gpstime;	//gpsÊ±¼ä
+	long double n;//n å¹³å‡è§’é€Ÿåº¦
+	long double tk;//å½’åŒ–æ—¶é—´
+	long double mk;//å«æ˜Ÿå¹³è¿‘ç‚¹è§’
+	long double ek; //åè¿‘ç‚¹è§’
+	long double vk;//çœŸè¿‘ç‚¹è§’
+	long double pa;//å‡äº¤è·è§’
+	long double cu;//æ‘„åŠ¨æ”¹æ­£é¡¹å‡äº¤è·è§’
+	long double cr;//æ‘„åŠ¨æ”¹æ­£é¡¹å«æ˜Ÿå‘å¾„
+	long double ci;//æ‘„åŠ¨æ”¹æ­£é¡¹å«æ˜Ÿè½¨é“å€¾è§’
+	long double uk;//æ”¹æ­£åå‡äº¤è·è§’
+	long double rk;//æ”¹æ­£åå«æ˜Ÿå‘å¾„
+	long double ik;//æ”¹æ­£åå«æ˜Ÿè½¨é“å€¾è§’
+    long double xk;//å¹³é¢ç›´è§’åæ ‡ç³»ä¸­çš„åæ ‡x
+	long double yk;//å¹³é¢ç›´è§’åæ ‡ç³»ä¸­çš„åæ ‡y
+	long double dk;//å‡äº¤ç‚¹ç»åº¦è®¡ç®—
+	long double Xk;//åœ°å¿ƒåæ ‡ç³»x
+	long double Yk;//åœ°å¿ƒåæ ‡ç³»y
+	long double Zk;//åœ°å¿ƒåæ ‡ç³»z
+	long double gpstime;	//gpsæ—¶é—´
 
 	ifstream inFile;
 	ofstream oFile;
 
-	string prn;	// ÎÀĞÇºÅ
-	int year, month, day, hour, min, second;	// Äê£¬ÔÂ£¬ÈÕ£¬Ê±£¬·Ö£¬Ãë
-	long double af0;	// ÎÀĞÇÖÓ²î
-	long double af1;	// ÎÀĞÇÖÓËÙ
-	long double af2;	// ÎÀĞÇÖÓËÙ±äÂÊ
+	string prn;	// å«æ˜Ÿå·
+	int year, month, day, hour, min, second;	// å¹´ï¼Œæœˆï¼Œæ—¥ï¼Œæ—¶ï¼Œåˆ†ï¼Œç§’
+	long double af0;	// å«æ˜Ÿé’Ÿå·®
+	long double af1;	// å«æ˜Ÿé’Ÿé€Ÿ
+	long double af2;	// å«æ˜Ÿé’Ÿé€Ÿå˜ç‡
 
-	long double IODE;	// Êı¾İÁäÆÚ
-	long double Crs;	// ¹ìµÀ°ë¾¶ÕıÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
-	long double a_poor;	// Æ½¾ù½ÇËÙ¶ÈÖ®²î
-	long double m0;		// Æ½½üµã½Ç
+	long double IODE;	// æ•°æ®é¾„æœŸ
+	long double Crs;	// è½¨é“åŠå¾„æ­£å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
+	long double a_poor;	// å¹³å‡è§’é€Ÿåº¦ä¹‹å·®
+	long double m0;		// å¹³è¿‘ç‚¹è§’
 
-	long double Cuc;	// Î³¶È·ù½ÇµÄÓàÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
-	long double e;		// ¹ìµÀÆ«ĞÄÂÊ
-	long double Cus;	// Î³¶È·ù½ÇµÄÓàÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
-	long double sqrtA;	// ¹ìµÀ³¤°ë¾¶µÄÆ½·½¸ù
+	long double Cuc;	// çº¬åº¦å¹…è§’çš„ä½™å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
+	long double e;		// è½¨é“åå¿ƒç‡
+	long double Cus;	// çº¬åº¦å¹…è§’çš„ä½™å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
+	long double sqrtA;	// è½¨é“é•¿åŠå¾„çš„å¹³æ–¹æ ¹
 
-	long double toe;	// ¹ìµÀ²ÎÊıµÄ²Î¿¼Ê±¼ä
-	long double Cic;	// ¹ìµÀÇã½ÇµÄÓàÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
-	long double Ra0;	// Éı½»µã³à¾­Óë±¾ÖÜÆğÊ¼Ê±¿Ì¸ñÁÖÄáÖÎºãĞÇÊ±Ö®²î
-	long double Cis;	// ¹ìµÀÇã½ÇµÄÕıÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
+	long double toe;	// è½¨é“å‚æ•°çš„å‚è€ƒæ—¶é—´
+	long double Cic;	// è½¨é“å€¾è§’çš„ä½™å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
+	long double Ra0;	// å‡äº¤ç‚¹èµ¤ç»ä¸æœ¬å‘¨èµ·å§‹æ—¶åˆ»æ ¼æ—å°¼æ²»æ’æ˜Ÿæ—¶ä¹‹å·®
+	long double Cis;	// è½¨é“å€¾è§’çš„æ­£å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
 
-	long double i0;		// ¹ìµÀÇã½Ç
-	long double Crc;	// ¹ìµÀ°ë¾¶µÄÓàÏÒµ÷ºÍÏî¸ÄÕıµÄÕñ·ù
-	long double w;		// ½üµØµã½Ç¾à
-	long double Ra;		// Éı½¹µã³à¾­±ä»¯ÂÊ
+	long double i0;		// è½¨é“å€¾è§’
+	long double Crc;	// è½¨é“åŠå¾„çš„ä½™å¼¦è°ƒå’Œé¡¹æ”¹æ­£çš„æŒ¯å¹…
+	long double w;		// è¿‘åœ°ç‚¹è§’è·
+	long double Ra;		// å‡ç„¦ç‚¹èµ¤ç»å˜åŒ–ç‡
 
-	long double i;		// Çã½Ç±ä»¯ÂÊ
-	long double L2;		// L2ÉÏµÄÂë
-	long double g_week;	// GPS ÖÜÊı
-	long double L2P;	// L2ÉÏµÄPÂë
+	long double i;		// å€¾è§’å˜åŒ–ç‡
+	long double L2;		// L2ä¸Šçš„ç 
+	long double g_week;	// GPS å‘¨æ•°
+	long double L2P;	// L2ä¸Šçš„Pç 
 
-	long double acc;	// ÎÀĞÇ¾«¶È
-	long double state;	// ½¡¿µ×´Ì¬
-	long double Tgd;	// µçÀë²ãÊ±ÑÓ³Ù²î
-	long double IDOC;	// ĞÇÖÓµÄÊı¾İÁäÆÚ
-	long double s_time;	// µçÎÄ·¢ËÍÊ±¿Ì
-	long double f_val;	// ÄâºÏÇø¼ä
-	void lglrchazhi(string path2, string path3);//¶ÔÎÀĞÇ×ø±êÊı¾İ½øĞĞ²åÖµ´¦Àí
-	double lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi);//À­¸ñÀÊÈÕ²åÖµËã·¨
-	vector<pair<int, int>> groupByWx_name(const vector<vector<string>>& data);//½«µÃµ½µÄÊı¾İ½øĞĞ·Ö×é
-	vector<long int> chazhi_gpstime(struct tm&, int jiange_miao=900);//¸ù¾İ¸ø³öµÄÈÕÆÚºÍ¼ä¸ôÊ±¼äÉú³É²åÖµgpsÖÜÄÚÃë£¬Ä¬ÈÏ¼ä¸ôÊ±¼äÎª900Ãë£¨15·ÖÖÓ£©
+	long double acc;	// å«æ˜Ÿç²¾åº¦
+	long double state;	// å¥åº·çŠ¶æ€
+	long double Tgd;	// ç”µç¦»å±‚æ—¶å»¶è¿Ÿå·®
+	long double IDOC;	// æ˜Ÿé’Ÿçš„æ•°æ®é¾„æœŸ
+	long double s_time;	// ç”µæ–‡å‘é€æ—¶åˆ»
+	long double f_val;	// æ‹ŸåˆåŒºé—´
+	void lglrchazhi(string path2, string path3);//å¯¹å«æ˜Ÿåæ ‡æ•°æ®è¿›è¡Œæ’å€¼å¤„ç†
+	double lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi);//æ‹‰æ ¼æœ—æ—¥æ’å€¼ç®—æ³•
+	vector<pair<int, int>> groupByWx_name(const vector<vector<string>>& data);//å°†å¾—åˆ°çš„æ•°æ®è¿›è¡Œåˆ†ç»„
+	vector<long int> chazhi_gpstime(struct tm&, int jiange_miao=900);//æ ¹æ®ç»™å‡ºçš„æ—¥æœŸå’Œé—´éš”æ—¶é—´ç”Ÿæˆæ’å€¼gpså‘¨å†…ç§’ï¼Œé»˜è®¤é—´éš”æ—¶é—´ä¸º900ç§’ï¼ˆ15åˆ†é’Ÿï¼‰
 
 };
