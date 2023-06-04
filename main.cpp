@@ -1,14 +1,14 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include "Satellites.h"
 using namespace std;
 
 int main()
 {
-	string path1 = "E:\\Ñ¸À×ÏÂÔØ\\SCH200CAN_R_20231460000_01D_MN.rnx\\SCH200CAN_R_20231460000_01D_MN.rnx";	 // GPS ÎÀĞÇĞÇÀúÔÚ PC ÉÏµÄÂ·¾¶
-	string path2 = "E:\\Ñ¸À×ÏÂÔØ\\brdc0560.22n\\results.csv";		// GPS Î»ÖÃ¼ÆËã½á¹û´æ´¢µÄÂ·¾¶
-	string path3 = "E:\\Ñ¸À×ÏÂÔØ\\brdc0560.22n\\final_results.csv";
-	tm jiesuan_date = {};//¶¨Òå½âËãÈÕÆÚ
+	string path1 = "E:\\è¿…é›·ä¸‹è½½\\SCH200CAN_R_20231460000_01D_MN.rnx\\SCH200CAN_R_20231460000_01D_MN.rnx";	 // GPS å«æ˜Ÿæ˜Ÿå†åœ¨ PC ä¸Šçš„è·¯å¾„
+	string path2 = "E:\\è¿…é›·ä¸‹è½½\\brdc0560.22n\\results.csv";		// GPS ä½ç½®è®¡ç®—ç»“æœå­˜å‚¨çš„è·¯å¾„
+	string path3 = "E:\\è¿…é›·ä¸‹è½½\\brdc0560.22n\\final_results.csv";
+	tm jiesuan_date = {};//å®šä¹‰è§£ç®—æ—¥æœŸ
 	jiesuan_date.tm_year = 2022 - 1900;
 	jiesuan_date.tm_mon = 1;
 	jiesuan_date.tm_mday = 25;
@@ -16,8 +16,8 @@ int main()
 	jiesuan_date.tm_min = 0;
 	jiesuan_date.tm_sec = 0;
 
-	Satellites s(path1, path2, path3, jiesuan_date);	// ÊµÀı»¯Àà£¬²¢´«ÈëµØÖ·
-	s.calData();						// µ÷ÓÃ¼ÆËãÎÀĞÇÎ»ÖÃµÄº¯Êı
+	Satellites s(path1, path2, path3, jiesuan_date);	// å®ä¾‹åŒ–ç±»ï¼Œå¹¶ä¼ å…¥åœ°å€
+	s.calData();						// è°ƒç”¨è®¡ç®—å«æ˜Ÿä½ç½®çš„å‡½æ•°
 	system("pause");
 	return 0;
 }
