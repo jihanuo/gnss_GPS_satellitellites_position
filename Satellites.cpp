@@ -15,7 +15,7 @@ using namespace std;
 #define E 7.29211567e-5 // 地球自转速率
 
 
-Satellites::Satellites(string path1, string path2, string path3)
+Satellites::Satellites(string path1, string path2, string path3, tm jiesuan_date)
 {
 	vector<string> prn;
 	vector<vector<long double>> vt;								// 二维动态数组
@@ -25,7 +25,7 @@ Satellites::Satellites(string path1, string path2, string path3)
 	//读取文件数据
 
 	if (this->inFile && this->oFile)													// 若文件打开成功则继续下面操作	
-	{	
+	{
 		cout << "开始读取数据" << endl;
 		string s;												// 存放读取的每一行字符串
 		smatch m;												// 存放正则匹配到的元素
@@ -49,11 +49,11 @@ Satellites::Satellites(string path1, string path2, string path3)
 				else
 					for (sregex_iterator it(s.begin(), s.end(), r1),
 						end_it; it != end_it; ++it) vi.push_back(stold(it->str()));	// 将匹配的每一个参数转为浮点型再推入vi
-						
+
 		}
 		vt.push_back(vi);	// 将最后一次遍历的值推入 vt
 		// 写入文档首行条目
-		this->oFile << "prn"<<","<<"gpstime"<< ","<<"n" << "," << "tk" << "," << "mk" << "," << "ek" << "," << "vk" << "," << "pa" << "," << "cu" << "," <<
+		this->oFile << "prn" << "," << "gpstime" << "," << "n" << "," << "tk" << "," << "mk" << "," << "ek" << "," << "vk" << "," << "pa" << "," << "cu" << "," <<
 			"cr" << "," << "ci" << "," << "uk" << "," << "rk" << "," << "ik" << "," << "xk" << "," << "yk" << "," << "dk" <<
 			"," << "Xk" << "," << "Yk" << "," << "Zk" << endl;
 
@@ -118,7 +118,8 @@ Satellites::Satellites(string path1, string path2, string path3)
 		this->calData();		// 计算数据
 		this->wdata();			// 存储中间数据
 	}
-		this->lglrchazhi(path2,path3);
+	cout << "正在计算" << endl;
+	this->lglrchazhi(path2, path3, jiesuan_date);
 
 }
 
@@ -147,7 +148,7 @@ void Satellites::calData()
 		this->ek = this->mk + (this->e * sin(temp));
 	}
 
-//(1)  轨道平面坐标系下卫星坐标
+	//(1)  轨道平面坐标系下卫星坐标
 	this->vk = atan((sqrt(1 - pow(this->e, 2)) * sin(this->ek) / (cos(this->ek) - this->e)));			// 计算真近角 vk
 	this->pa = this->vk + this->w;																		// 计算升交距角
 	this->cu = (this->Cuc * cos(2 * this->pa)) + (this->Cus * sin(2 * this->pa));						// 计算摄动改正项
@@ -159,7 +160,7 @@ void Satellites::calData()
 	this->xk = this->rk * cos(this->uk);																// 轨道平面直角坐标系中的坐标
 	this->yk = this->rk * sin(this->uk);
 
-//(2)轨道平面坐标系转换地心地固系坐标系 
+	//(2)轨道平面坐标系转换地心地固系坐标系 
 
 	this->dk = this->Ra0 + ((this->Ra - E) * this->tk) - (this->Ra * this->toe);//公式修改								// 升交点经度计算
 	this->Xk = this->xk * cos(this->dk) - (this->yk * cos(this->ik) * sin(this->dk));					// 计算在地心固定坐标系中的直角坐标
@@ -172,7 +173,7 @@ void Satellites::calData()
 void Satellites::wdata()
 {
 	//cout << this->prn << endl;
-	this->oFile<< this->prn<< "," << this->gpstime << "," << this->n << "," << this->tk << "," << this->mk << "," << this->ek << ","
+	this->oFile << this->prn << "," << this->gpstime << "," << this->n << "," << this->tk << "," << this->mk << "," << this->ek << ","
 		<< this->vk << "," << this->pa << "," << this->cu << "," << this->cr <<
 		"," << this->ci << "," << this->uk << "," << this->rk << "," << this->ik
 		<< "," << this->xk << "," << this->yk << "," << this->dk << "," << this->Xk <<
@@ -218,12 +219,10 @@ long double Satellites::getgpst(char c = 's')
 
 
 
-
-
-string Satellites:: gpsSeconds2Time(long long gpsSeconds)
+string Satellites::gpsSeconds2Time(long long gpsSeconds)
 {
 	//cout << "getw " << this->getgpst('s')<<endl;
-	time_t utcTime = gpsSeconds+this->getgpst('w')* 604800+ 315964800; // 转化为utc
+	time_t utcTime = gpsSeconds + this->getgpst('w') * 604800 + 315964800; // 转化为utc
 	struct tm utcTm = { 0 };
 	gmtime_s(&utcTm, &utcTime); // 将UTC时间转化为可读时间
 
@@ -235,19 +234,19 @@ string Satellites:: gpsSeconds2Time(long long gpsSeconds)
 	return timeStr;
 }
 
-vector<long int> Satellites::chazhi_gpstime(struct tm& jiesuan_date,int seconds) {
+vector<long int> Satellites::chazhi_gpstime(struct tm& jiesuan_date, int seconds) {
 	vector<long int> gpstime;//
 	time_t utc_time;
 	utc_time = mktime(&jiesuan_date);
-	cout << "utc " << utc_time << endl;
+	//cout << "utc " << utc_time << endl;
 
 	for (int i = 0; i < (86400 / seconds); i++) {
 		gpstime.push_back((utc_time - 315964800) % 604800);
 		utc_time += seconds;
 	}
 	for (const auto& col : gpstime) {
-   		cout << col << " ";
-		}	return gpstime;
+		//cout << col << " ";
+	}	return gpstime;
 }
 
 
@@ -276,7 +275,7 @@ vector<vector<string>> readCSV(const string& filename) {
 	return result;
 }
 
-vector<pair<int, int>> Satellites:: groupByWx_name(const vector<vector<string>>& data) {
+vector<pair<int, int>> Satellites::groupByWx_name(const vector<vector<string>>& data) {
 	vector<vector<string>> sortedData = data;
 	sort(sortedData.begin(), sortedData.end(), [](const vector<string>& a, const vector<string>& b) { return a[0] < b[0]; });
 
@@ -305,7 +304,7 @@ vector<pair<int, int>> Satellites:: groupByWx_name(const vector<vector<string>>&
 
 
 
-double Satellites:: lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi) {
+double Satellites::lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi) {
 	if (x.size() != y.size()) {
 		cout << "x 和 y 的长度不相等！" << endl;
 		return NAN;
@@ -330,7 +329,7 @@ double Satellites:: lagrangeInterpolation(const vector<double>& x, const vector<
 };
 
 //对坐标进行每隔15分钟的线性插值
-void Satellites::lglrchazhi(string path2, string path3)
+void Satellites::lglrchazhi(string path2, string path3, tm jiesuan_date)
 {
 	vector<vector<string>> data = readCSV(path2);//读入已知数据   data为所有数据
 	//for (auto row : data) {
@@ -353,19 +352,11 @@ void Satellites::lglrchazhi(string path2, string path3)
 
 	// 拉格朗日线性插值
 	vector<vector<string>> WX_cz;     //插值后数据
-
-	tm jiesuan_date = {};//定义解算日期
-	jiesuan_date.tm_year = 2022-1900;
-	jiesuan_date.tm_mon = 1;
-	jiesuan_date.tm_mday = 25;
-	jiesuan_date.tm_hour = 0;
-	jiesuan_date.tm_min = 0;
-	jiesuan_date.tm_sec = 0;
 	time_t utc_time;
 	utc_time = mktime(&jiesuan_date);
-	cout << "utc " << utc_time << endl;
+	//cout << "utc " << utc_time << endl;
 
-	vector<long int> chazhi_time = this->chazhi_gpstime(jiesuan_date,900);//获得解算区间
+	vector<long int> chazhi_time = this->chazhi_gpstime(jiesuan_date, 900);//获得解算区间
 
 
 	vector<pair<int, int>> quyu = groupByWx_name(Weixing_jiesuan);
@@ -412,6 +403,6 @@ void Satellites::lglrchazhi(string path2, string path3)
 		//	cout << endl;
 		//}
 	}
-		cout << "已将排序后的结果保存在" << path3 << " 文件中。" << endl;
+	cout << "已将排序后的结果保存在" << path3 << " 文件中。" << endl;
 
-	}
+}

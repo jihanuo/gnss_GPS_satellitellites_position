@@ -8,7 +8,7 @@ using namespace std;
 class Satellites
 {
 public:
-	Satellites(string path, string path2, string path3);
+	Satellites(string path, string path2, string path3, tm jiesuan_date);
 	~Satellites();
 	void calData();
 	static int ydcount(int year);					// 获取每一年的天数
@@ -30,7 +30,7 @@ private:
 	long double uk;//改正后升交距角
 	long double rk;//改正后卫星向径
 	long double ik;//改正后卫星轨道倾角
-    long double xk;//平面直角坐标系中的坐标x
+	long double xk;//平面直角坐标系中的坐标x
 	long double yk;//平面直角坐标系中的坐标y
 	long double dk;//升交点经度计算
 	long double Xk;//地心坐标系x
@@ -78,9 +78,9 @@ private:
 	long double IDOC;	// 星钟的数据龄期
 	long double s_time;	// 电文发送时刻
 	long double f_val;	// 拟合区间
-	void lglrchazhi(string path2, string path3);//对卫星坐标数据进行插值处理
+	void lglrchazhi(string path2, string path3, tm jiesuan_date);//对卫星坐标数据进行插值处理
 	double lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi);//拉格朗日插值算法
 	vector<pair<int, int>> groupByWx_name(const vector<vector<string>>& data);//将得到的数据进行分组
-	vector<long int> chazhi_gpstime(struct tm&, int jiange_miao=900);//根据给出的日期和间隔时间生成插值gps周内秒，默认间隔时间为900秒（15分钟）
+	vector<long int> chazhi_gpstime(struct tm&, int jiange_miao = 900);//根据给出的日期和间隔时间生成插值gps周内秒，默认间隔时间为900秒（15分钟）
 
 };
