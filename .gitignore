@@ -361,3 +361,7 @@ MigrationBackup/
 
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
+/data/220225data.rnx
+/data/final_results.csv
+/data/results.csv
+/gnssweixing.vcxproj
