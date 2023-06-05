@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 #include <iostream>
 #include <regex>
 #include <cctype>
@@ -11,56 +11,56 @@
 #include <ctime>
 
 using namespace std;
-#define U 3.986005e+14	// WGS-84 ÖĞµØÇòÒıÁ¦³£Êı
-#define E 7.29211567e-5 // µØÇò×Ô×ªËÙÂÊ
+#define U 3.986005e+14	// WGS-84 ä¸­åœ°çƒå¼•åŠ›å¸¸æ•°
+#define E 7.29211567e-5 // åœ°çƒè‡ªè½¬é€Ÿç‡
 
 
-Satellites::Satellites(string path1, string path2, string path3)
+Satellites::Satellites(string path1, string path2, string path3, tm jiesuan_date)
 {
 	vector<string> prn;
-	vector<vector<long double>> vt;								// ¶şÎ¬¶¯Ì¬Êı×é
-	vector<long double> vi;										// Ò»Î¬¶¯Ì¬Êı×é
-	this->inFile.open(path1, ios::in);									// ´ò¿ªÎÄ¼ş
+	vector<vector<long double>> vt;								// äºŒç»´åŠ¨æ€æ•°ç»„
+	vector<long double> vi;										// ä¸€ç»´åŠ¨æ€æ•°ç»„
+	this->inFile.open(path1, ios::in);									// æ‰“å¼€æ–‡ä»¶
 	this->oFile.open(path2, ios::out | ios::trunc);
-	//¶ÁÈ¡ÎÄ¼şÊı¾İ
+	//è¯»å–æ–‡ä»¶æ•°æ®
 
-	if (this->inFile && this->oFile)													// ÈôÎÄ¼ş´ò¿ª³É¹¦Ôò¼ÌĞøÏÂÃæ²Ù×÷	
-	{	
-		cout << "¿ªÊ¼¶ÁÈ¡Êı¾İ" << endl;
-		string s;												// ´æ·Å¶ÁÈ¡µÄÃ¿Ò»ĞĞ×Ö·û´®
-		smatch m;												// ´æ·ÅÕıÔòÆ¥Åäµ½µÄÔªËØ
-		regex r("G\\d\\d.*|-?\\d.\\d{12}e[-+]\\d\\d");			// ÕıÔòÆ¥ÅäÃ¿¸öÎÀĞÇµ¥Ôª
+	if (this->inFile && this->oFile)													// è‹¥æ–‡ä»¶æ‰“å¼€æˆåŠŸåˆ™ç»§ç»­ä¸‹é¢æ“ä½œ	
+	{
+		cout << "å¼€å§‹è¯»å–æ•°æ®" << endl;
+		string s;												// å­˜æ”¾è¯»å–çš„æ¯ä¸€è¡Œå­—ç¬¦ä¸²
+		smatch m;												// å­˜æ”¾æ­£åˆ™åŒ¹é…åˆ°çš„å…ƒç´ 
+		regex r("G\\d\\d.*|-?\\d.\\d{12}e[-+]\\d\\d");			// æ­£åˆ™åŒ¹é…æ¯ä¸ªå«æ˜Ÿå•å…ƒ
 		regex r1("\\d{4}|\\d\\d|-?\\d\\.\\d{12}e[+-]\\d\\d");
 		int i = 0;
-		while (getline(this->inFile, s))								// ´ò¿ªÎÄ¼ş
+		while (getline(this->inFile, s))								// æ‰“å¼€æ–‡ä»¶
 		{
 
 			if (++i == 13220) break;
-			if (regex_search(s, m, r))							// Æ¥ÅäÌõ¼şÎª True ½øÈë
-				if (regex_search(s, m, regex("G\\d\\d")))		// Ê×ĞĞÔò½øÈë
+			if (regex_search(s, m, r))							// åŒ¹é…æ¡ä»¶ä¸º True è¿›å…¥
+				if (regex_search(s, m, regex("G\\d\\d")))		// é¦–è¡Œåˆ™è¿›å…¥
 				{
 					//cout << s.substr(0, 3) ;
-					prn.push_back(s.substr(0, 3));				// ½«ÎÀĞÇ prn ÍÆÈë
-					vt.push_back(vi);							// ½«Ö®Ç°µÄ±éÀú×÷ÎªÒ»¸öÍÆÈë vt	
-					vi.clear();									// Çå¿Õvi£¬ÎªÏÂÒ»´Î±éÀú×ö×¼±¸
-					for (sregex_iterator it(s.begin() + 3, s.end(), r1), end_it; it != end_it; ++it)	// sregex_iterator ÕıÔòµü´ú×÷ÓÃ
-						vi.push_back(stold(it->str()));			// ½«Æ¥ÅäµÄÃ¿Ò»¸ö²ÎÊı×ªÎª¸¡µãĞÍÔÙÍÆÈëvi
+					prn.push_back(s.substr(0, 3));				// å°†å«æ˜Ÿ prn æ¨å…¥
+					vt.push_back(vi);							// å°†ä¹‹å‰çš„éå†ä½œä¸ºä¸€ä¸ªæ¨å…¥ vt	
+					vi.clear();									// æ¸…ç©ºviï¼Œä¸ºä¸‹ä¸€æ¬¡éå†åšå‡†å¤‡
+					for (sregex_iterator it(s.begin() + 3, s.end(), r1), end_it; it != end_it; ++it)	// sregex_iterator æ­£åˆ™è¿­ä»£ä½œç”¨
+						vi.push_back(stold(it->str()));			// å°†åŒ¹é…çš„æ¯ä¸€ä¸ªå‚æ•°è½¬ä¸ºæµ®ç‚¹å‹å†æ¨å…¥vi
 				}
 				else
 					for (sregex_iterator it(s.begin(), s.end(), r1),
-						end_it; it != end_it; ++it) vi.push_back(stold(it->str()));	// ½«Æ¥ÅäµÄÃ¿Ò»¸ö²ÎÊı×ªÎª¸¡µãĞÍÔÙÍÆÈëvi
-						
+						end_it; it != end_it; ++it) vi.push_back(stold(it->str()));	// å°†åŒ¹é…çš„æ¯ä¸€ä¸ªå‚æ•°è½¬ä¸ºæµ®ç‚¹å‹å†æ¨å…¥vi
+
 		}
-		vt.push_back(vi);	// ½«×îºóÒ»´Î±éÀúµÄÖµÍÆÈë vt
-		// Ğ´ÈëÎÄµµÊ×ĞĞÌõÄ¿
-		this->oFile << "prn"<<","<<"gpstime"<< ","<<"n" << "," << "tk" << "," << "mk" << "," << "ek" << "," << "vk" << "," << "pa" << "," << "cu" << "," <<
+		vt.push_back(vi);	// å°†æœ€åä¸€æ¬¡éå†çš„å€¼æ¨å…¥ vt
+		// å†™å…¥æ–‡æ¡£é¦–è¡Œæ¡ç›®
+		this->oFile << "prn" << "," << "gpstime" << "," << "n" << "," << "tk" << "," << "mk" << "," << "ek" << "," << "vk" << "," << "pa" << "," << "cu" << "," <<
 			"cr" << "," << "ci" << "," << "uk" << "," << "rk" << "," << "ik" << "," << "xk" << "," << "yk" << "," << "dk" <<
 			"," << "Xk" << "," << "Yk" << "," << "Zk" << endl;
 
 	}
-	else cout << "´ò¿ªÎÄ¼şÊ§°Ü£¡Çë¹Ø±Õ Excel ºóÖØÊÔ£¡" << endl;	// ÈôÎÄ¼ş´ò¿ªÊ§°ÜÔòÌáÊ¾
+	else cout << "æ‰“å¼€æ–‡ä»¶å¤±è´¥ï¼è¯·å…³é—­ Excel åé‡è¯•ï¼" << endl;	// è‹¥æ–‡ä»¶æ‰“å¼€å¤±è´¥åˆ™æç¤º
 
-	for (int i = 1; i < vt.size(); i++)	// ½«Êı¾İ´æ´¢ÔÚ±äÁ¿
+	for (int i = 1; i < vt.size(); i++)	// å°†æ•°æ®å­˜å‚¨åœ¨å˜é‡
 	{
 		//cout << i << endl;
 		this->prn = prn[i - 1];
@@ -70,7 +70,6 @@ Satellites::Satellites(string path1, string path2, string path3)
 		this->hour = vt[i][3];
 		this->min = vt[i][4];
 		this->second = vt[i][5];
-
 		this->af0 = vt[i][6];
 		this->af1 = vt[i][7];
 		this->af2 = vt[i][8];
@@ -116,31 +115,32 @@ Satellites::Satellites(string path1, string path2, string path3)
 		//this->s_time = vt[i][33];
 		//this->f_val = vt[i][34];
 
-		this->calData();		// ¼ÆËãÊı¾İ
-		this->wdata();			// ´æ´¢ÖĞ¼äÊı¾İ
+		this->calData();		// è®¡ç®—æ•°æ®
+		this->wdata();			// å­˜å‚¨ä¸­é—´æ•°æ®
 	}
-		this->lglrchazhi(path2,path3);
+	cout << "æ­£åœ¨è®¡ç®—" << endl;
+	this->lglrchazhi(path2, path3, jiesuan_date);
 
 }
 
-// Îö¹¹º¯Êı£¬¹Ø±ÕÎÄ¼ş
+// ææ„å‡½æ•°ï¼Œå…³é—­æ–‡ä»¶
 Satellites::~Satellites()
 {
-	this->inFile.close();		// ¹Ø±ÕÎÄ¼ş
-	this->oFile.close();				// ¹Ø±ÕÎÄ¼ş
+	this->inFile.close();		// å…³é—­æ–‡ä»¶
+	this->oFile.close();				// å…³é—­æ–‡ä»¶
 }
 
-// ¼ÆËãÊı¾İº¯Êı
+// è®¡ç®—æ•°æ®å‡½æ•°
 void Satellites::calData()
 {
-	this->n = sqrt(U) / pow(this->sqrtA, 3) + this->a_poor; //	¼ÆËãÆ½¾ù½ÇËÙ¶È n
+	this->n = sqrt(U) / pow(this->sqrtA, 3) + this->a_poor; //	è®¡ç®—å¹³å‡è§’é€Ÿåº¦ n
 	//cout << "gpst  " << this->getgpst('s');
 	//cout << "toe " << this->toe;
 	this->gpstime = this->getgpst('s');
-	this->tk = this->getgpst('s') - this->toe;	//	¼ÆËã¹é»¯Ê±¼ä tk
+	this->tk = this->getgpst('s') - this->toe;	//	è®¡ç®—å½’åŒ–æ—¶é—´ tk
 	//cout << "tkshijain  " << this->tk<<endl;
-	this->mk = this->m0 + (this->n * this->tk);				// ¹Û²âÊ±¼ä mk
-	this->ek = this->mk;									// ¼ÆËãÆ«½ü½Ç
+	this->mk = this->m0 + (this->n * this->tk);				// è§‚æµ‹æ—¶é—´ mk
+	this->ek = this->mk;									// è®¡ç®—åè¿‘è§’
 	long double temp = 0;
 	while (fabs(this->ek - temp) > 0.10e-12)
 	{
@@ -148,35 +148,32 @@ void Satellites::calData()
 		this->ek = this->mk + (this->e * sin(temp));
 	}
 
-//(1)  ¹ìµÀÆ½Ãæ×ø±êÏµÏÂÎÀĞÇ×ø±ê
-	this->vk = atan((sqrt(1 - pow(this->e, 2)) * sin(this->ek) / (cos(this->ek) - this->e)));			// ¼ÆËãÕæ½ü½Ç vk
-	this->pa = this->vk + this->w;																		// ¼ÆËãÉı½»¾à½Ç
-	this->cu = (this->Cuc * cos(2 * this->pa)) + (this->Cus * sin(2 * this->pa));						// ¼ÆËãÉã¶¯¸ÄÕıÏî
+	//(1)  è½¨é“å¹³é¢åæ ‡ç³»ä¸‹å«æ˜Ÿåæ ‡
+	this->vk = atan((sqrt(1 - pow(this->e, 2)) * sin(this->ek) / (cos(this->ek) - this->e)));			// è®¡ç®—çœŸè¿‘è§’ vk
+	this->pa = this->vk + this->w;																		// è®¡ç®—å‡äº¤è·è§’
+	this->cu = (this->Cuc * cos(2 * this->pa)) + (this->Cus * sin(2 * this->pa));						// è®¡ç®—æ‘„åŠ¨æ”¹æ­£é¡¹
 	this->cr = (this->Crc * cos(2 * this->pa)) + (this->Crs * sin(2 * this->pa));
 	this->ci = (this->Cic * cos(2 * this->pa)) + (this->Cis * sin(2 * this->pa));
-	this->uk = this->pa + this->cu;																		// ¼ÆËã¾­¹ıÉã¶¯¸ÄÕıµÄ²ÎÊı
+	this->uk = this->pa + this->cu;																		// è®¡ç®—ç»è¿‡æ‘„åŠ¨æ”¹æ­£çš„å‚æ•°
 	this->rk = pow(this->sqrtA, 2) * (1 - this->e * cos(this->ek)) + this->cr;
 	this->ik = this->i0 + this->ci + (this->i * this->tk);
-	this->xk = this->rk * cos(this->uk);																// ¹ìµÀÆ½ÃæÖ±½Ç×ø±êÏµÖĞµÄ×ø±ê
+	this->xk = this->rk * cos(this->uk);																// è½¨é“å¹³é¢ç›´è§’åæ ‡ç³»ä¸­çš„åæ ‡
 	this->yk = this->rk * sin(this->uk);
 
-//(2)¹ìµÀÆ½Ãæ×ø±êÏµ×ª»»µØĞÄµØ¹ÌÏµ×ø±êÏµ 
+	//(2)è½¨é“å¹³é¢åæ ‡ç³»è½¬æ¢åœ°å¿ƒåœ°å›ºç³»åæ ‡ç³» 
 
-	this->dk = this->Ra0 + ((this->Ra - E) * this->tk) - (this->Ra * this->toe);//¹«Ê½ĞŞ¸Ä								// Éı½»µã¾­¶È¼ÆËã
-	this->Xk = this->xk * cos(this->dk) - (this->yk * cos(this->ik) * sin(this->dk));					// ¼ÆËãÔÚµØĞÄ¹Ì¶¨×ø±êÏµÖĞµÄÖ±½Ç×ø±ê
+	this->dk = this->Ra0 + ((this->Ra - E) * this->tk) - (this->Ra * this->toe);//å…¬å¼ä¿®æ”¹								// å‡äº¤ç‚¹ç»åº¦è®¡ç®—
+	this->Xk = this->xk * cos(this->dk) - (this->yk * cos(this->ik) * sin(this->dk));					// è®¡ç®—åœ¨åœ°å¿ƒå›ºå®šåæ ‡ç³»ä¸­çš„ç›´è§’åæ ‡
 	this->Yk = this->xk * sin(this->dk) + (this->yk * cos(this->ik) * sin(this->dk));
 	this->Zk = this->yk * sin(this->ik);
 }
 
 
-
-// c = 'w' Ôò·µ»Ø gps ÖÜ£¬ c = 's' Ôò·µ»Ø gpa ÖÜÄÚÃë£¬Ä¬ÈÏ·µ»ØÖÜÄÚÃë
-
-// ½«Êı¾İĞ´ÈëÎÄ¼ş
+// å°†æ•°æ®å†™å…¥æ–‡ä»¶
 void Satellites::wdata()
 {
 	//cout << this->prn << endl;
-	this->oFile<< this->prn<< "," << this->gpstime << "," << this->n << "," << this->tk << "," << this->mk << "," << this->ek << ","
+	this->oFile << this->prn << "," << this->gpstime << "," << this->n << "," << this->tk << "," << this->mk << "," << this->ek << ","
 		<< this->vk << "," << this->pa << "," << this->cu << "," << this->cr <<
 		"," << this->ci << "," << this->uk << "," << this->rk << "," << this->ik
 		<< "," << this->xk << "," << this->yk << "," << this->dk << "," << this->Xk <<
@@ -184,50 +181,50 @@ void Satellites::wdata()
 }
 
 
-// ¼ÆËãÃ¿Ò»ÄêµÄÌìÊı
+// è®¡ç®—æ¯ä¸€å¹´çš„å¤©æ•°
 int Satellites::ydcount(int year)
 {
 	int count = 0;
-	if (year == 1980)	count = 360;													// ÈôÊÇ 1980 ÄêµÄ»°£¬°´ÕÕËã·¨ 360 Ìì
-	else if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))	count = 366;	// ÈôÊÇÈòÄê£¬Ôò 1 ÄêÓĞ 366 Ìì
-	else	count = 365;																// ÈôÆ½ÈòÄê£¬Ôò 1 ÄêÓĞ 365 Ìì
+	if (year == 1980)	count = 360;													// è‹¥æ˜¯ 1980 å¹´çš„è¯ï¼ŒæŒ‰ç…§ç®—æ³• 360 å¤©
+	else if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))	count = 366;	// è‹¥æ˜¯é—°å¹´ï¼Œåˆ™ 1 å¹´æœ‰ 366 å¤©
+	else	count = 365;																// è‹¥å¹³é—°å¹´ï¼Œåˆ™ 1 å¹´æœ‰ 365 å¤©
 	return count;
 }
 
-// ¼ÆËãÒ»ÄêÖĞÃ¿¸öÔÂµÄÌìÊı
+// è®¡ç®—ä¸€å¹´ä¸­æ¯ä¸ªæœˆçš„å¤©æ•°
 int Satellites::ydcount(int year, int month)
 {
-	int count = 0;																			// ´æ´¢Ã¿¸öÔÂµÄÌìÊı
-	if (year == 1980 && month == 1) count = 25;												// ¸ù¾İËã·¨£¬1980 Äê 1 ÔÂËã×÷ 25 Ìì
-	else if (month == 4 || month == 6 || month == 9 || month == 11) count = 30;				// ËÄÁù¾Å¶¬ 30 Õû
+	int count = 0;																			// å­˜å‚¨æ¯ä¸ªæœˆçš„å¤©æ•°
+	if (year == 1980 && month == 1) count = 25;												// æ ¹æ®ç®—æ³•ï¼Œ1980 å¹´ 1 æœˆç®—ä½œ 25 å¤©
+	else if (month == 4 || month == 6 || month == 9 || month == 11) count = 30;				// å››å…­ä¹å†¬ 30 æ•´
 	else if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) count = 31;
 	else
 	{
-		if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))	count = 29;			// ÈôÊÇÈòÄê£¬Ôò 2 ÔÂÓĞ 29 Ìì
+		if ((year % 4 == 0) && (year % 100 != 0) || (year % 400 == 0))	count = 29;			// è‹¥æ˜¯é—°å¹´ï¼Œåˆ™ 2 æœˆæœ‰ 29 å¤©
 		else count = 28;
 	}
 	return count;
 
 }
+
+// c = 'w' åˆ™è¿”å› gps å‘¨ï¼Œ c = 's' åˆ™è¿”å› gpa å‘¨å†…ç§’ï¼Œé»˜è®¤è¿”å›å‘¨å†…ç§’
 long double Satellites::getgpst(char c = 's')
 {
-	if (c != 'w' && c != 's') return -1;											// Èô´«µİµÄ²ÎÊı²»ÕıÈ·£¬Ôò·µ»Ø-1
+	if (c != 'w' && c != 's') return -1;											// è‹¥ä¼ é€’çš„å‚æ•°ä¸æ­£ç¡®ï¼Œåˆ™è¿”å›-1
 	int days = this->day;
-	for (int i = 1980; i < this->year; i++)	days += ydcount(i);						// ¼ÆËãÄêÌìÊı
-	for (int i = 1; i < this->month; i++)	days += ydcount(this->year, i);			// ¼ÆËãÔÂÌìÊı
+	for (int i = 1980; i < this->year; i++)	days += ydcount(i);						// è®¡ç®—å¹´å¤©æ•°
+	for (int i = 1; i < this->month; i++)	days += ydcount(this->year, i);			// è®¡ç®—æœˆå¤©æ•°
 	return c == 'w' ? days / 7 : (days % 7) * 86400 + (this->hour * 3600) + (this->min * 60) + this->second;
 }
 
 
 
-
-
-string Satellites:: gpsSeconds2Time(long long gpsSeconds)
+string Satellites::gpsSeconds2Time(long long gpsSeconds)
 {
 	//cout << "getw " << this->getgpst('s')<<endl;
-	time_t utcTime = gpsSeconds+this->getgpst('w')* 604800+ 315964800; // ×ª»¯Îªutc
+	time_t utcTime = gpsSeconds + this->getgpst('w') * 604800 + 315964800; // è½¬åŒ–ä¸ºutc
 	struct tm utcTm = { 0 };
-	gmtime_s(&utcTm, &utcTime); // ½«UTCÊ±¼ä×ª»¯Îª¿É¶ÁÊ±¼ä
+	gmtime_s(&utcTm, &utcTime); // å°†UTCæ—¶é—´è½¬åŒ–ä¸ºå¯è¯»æ—¶é—´
 
 	char buffer[20];
 	sprintf_s(buffer, "%04d-%02d-%02d %02d:%02d:%02d", utcTm.tm_year + 1900, utcTm.tm_mon + 1, utcTm.tm_mday,
@@ -237,9 +234,23 @@ string Satellites:: gpsSeconds2Time(long long gpsSeconds)
 	return timeStr;
 }
 
+vector<long int> Satellites::chazhi_gpstime(struct tm& jiesuan_date, int seconds) {
+	vector<long int> gpstime;//
+	time_t utc_time;
+	utc_time = mktime(&jiesuan_date);
+	//cout << "utc " << utc_time << endl;
+
+	for (int i = 0; i < (86400 / seconds); i++) {
+		gpstime.push_back((utc_time - 315964800) % 604800);
+		utc_time += seconds;
+	}
+	for (const auto& col : gpstime) {
+		//cout << col << " ";
+	}	return gpstime;
+}
 
 
-// ÒÔ¶ººÅÎª·Ö¸ô·û£¬½«Ò»ĞĞÊı¾İ½âÎöÎªÒ»¸övector<string>
+// ä»¥é€—å·ä¸ºåˆ†éš”ç¬¦ï¼Œå°†ä¸€è¡Œæ•°æ®è§£æä¸ºä¸€ä¸ªvector<string>
 vector<string> parseLine(const string& line) {
 	vector<string> result;
 	stringstream ss(line);
@@ -250,7 +261,7 @@ vector<string> parseLine(const string& line) {
 	return result;
 }
 
-// ¶ÁÈ¡CSVÎÄ¼ş£¬·µ»ØÒ»¸ö¶şÎ¬vector<string>
+// è¯»å–CSVæ–‡ä»¶ï¼Œè¿”å›ä¸€ä¸ªäºŒç»´vector<string>
 vector<vector<string>> readCSV(const string& filename) {
 	vector<vector<string>> result;
 	ifstream file(filename);
@@ -264,68 +275,118 @@ vector<vector<string>> readCSV(const string& filename) {
 	return result;
 }
 
+vector<pair<int, int>> Satellites::groupByWx_name(const vector<vector<string>>& data) {
+	vector<vector<string>> sortedData = data;
+	sort(sortedData.begin(), sortedData.end(), [](const vector<string>& a, const vector<string>& b) { return a[0] < b[0]; });
 
-//¶Ô×ø±ê½øĞĞÃ¿¸ô15·ÖÖÓµÄÏßĞÔ²åÖµ
-void Satellites::lglrchazhi(string path2,string path3)
+	string currentKey = "";
+	int start = 0, end = 0;
+	vector<pair<int, int>> result;
+
+	for (int i = 0; i < sortedData.size(); ++i) {
+		if (sortedData[i][0] != currentKey) {
+			if (!currentKey.empty()) {
+				result.push_back(make_pair(start, end - 1));
+			}
+			currentKey = sortedData[i][0];
+			start = i;
+		}
+		end = i + 1;
+	}
+
+	if (!currentKey.empty()) {
+		result.push_back(make_pair(start, end - 1));
+	}
+
+	return result;
+}
+
+
+
+
+double Satellites::lagrangeInterpolation(const vector<double>& x, const vector<double>& y, double xi) {
+	if (x.size() != y.size()) {
+		cout << "x å’Œ y çš„é•¿åº¦ä¸ç›¸ç­‰ï¼" << endl;
+		return NAN;
+	}
+
+	int n = x.size();
+	double yi = 0.0;
+
+	for (int i = 0; i < n; ++i) {
+		double li = 1.0;
+
+		for (int j = 0; j < n; ++j) {
+			if (i != j) {
+				li *= (xi - x[j]) / (x[i] - x[j]);
+			}
+		}
+
+		yi += y[i] * li;
+	}
+
+	return yi;
+};
+
+//å¯¹åæ ‡è¿›è¡Œæ¯éš”15åˆ†é’Ÿçš„çº¿æ€§æ’å€¼
+void Satellites::lglrchazhi(string path2, string path3, tm jiesuan_date)
 {
-	vector<vector<string>> data = readCSV(path2);//¶ÁÈëÒÑÖªÊı¾İ   dataÎªËùÓĞÊı¾İ
+	vector<vector<string>> data = readCSV(path2);//è¯»å…¥å·²çŸ¥æ•°æ®   dataä¸ºæ‰€æœ‰æ•°æ®
 	//for (auto row : data) {
 	//	for (auto cell : row) {
 	//		cout << cell << " ";
 	//	}
 	//	cout << endl;
 	//}
-	vector<vector<string>> Weixing_jiesuan;     //É¸Ñ¡³öÒªËãµÄÊı¾İ
-	for (int i = 1; i < data.size(); i++) { // ´ÓµÚ¶şĞĞ¿ªÊ¼±éÀú   
+	vector<vector<string>> Weixing_jiesuan;     //ç­›é€‰å‡ºè¦ç®—çš„æ•°æ®
+	for (int i = 1; i < data.size(); i++) { // ä»ç¬¬äºŒè¡Œå¼€å§‹éå†   
 		vector<string> newRow;
-		newRow.push_back(data[i][0]); // µÚÒ»ÁĞ
-		newRow.push_back(data[i][1]); // µÚ¶şÁĞ
-		newRow.push_back(data[i][17]); // µÚ18ÁĞ
-		newRow.push_back(data[i][18]); // µÚ19ÁĞ
-		newRow.push_back(data[i][19]); // µÚ20ÁĞ
+		newRow.push_back(data[i][0]); // prn
+		newRow.push_back(data[i][1]); // gpså‘¨å†…ç§’
+		newRow.push_back(data[i][17]); // x
+		newRow.push_back(data[i][18]); // y
+		newRow.push_back(data[i][19]); // z
 		Weixing_jiesuan.push_back(newRow);
 	}
 
-	// À­¸ñÀÊÈÕÏßĞÔ²åÖµ
-	double x, y;
-	vector<vector<string>> WX_cz;     //
 
-	for (int i = 2; i < Weixing_jiesuan.size(); i++) {
-		string name1 = Weixing_jiesuan[i - 1][0], name2 = Weixing_jiesuan[i][0];
-		//cout << "weixingming1 " << name1 << "weixingming2 " << name2 << endl;
-		if (name1==name2)
-		{//Í¬Ò»¸öÎÀĞÇ²Å½øĞĞ²åÖµ²Ù×÷
-			double x1 = stod(Weixing_jiesuan[i - 1][1]), x2 = stod(Weixing_jiesuan[i][1]);//ÏßĞÔ²åÖµ¼ä¸ô
-			double X1 = stod(Weixing_jiesuan[i - 1][2]), X2 = stod(Weixing_jiesuan[i][2]);//»ñµÃ¼ä¸ô×ø±êÖµ
-			double Y1 = stod(Weixing_jiesuan[i - 1][3]), Y2 = stod(Weixing_jiesuan[i][3]);
-			double Z1 = stod(Weixing_jiesuan[i - 1][4]), Z2 = stod(Weixing_jiesuan[i][4]);
-			for (double j = x1; j < x2; j += 900) { // Ã¿¸ô900Ãë½øĞĞ²åÖµ
-				double k = (j - x1) / (x2 - x1);
-				double X = X1 * (1 - k) + X2 * k;   //²åÖµ×ø±ê
-				double Y = Y1 * (1 - k) + Y2 * k;
-				double Z = Z1 * (1 - k) + Z2 * k;
-				//cout << name1 << " shijian" << j << " zuobiao  " << X << " " << Y << " " << endl;
+	// æ‹‰æ ¼æœ—æ—¥çº¿æ€§æ’å€¼
+	vector<vector<string>> WX_cz;     //æ’å€¼åæ•°æ®
+	time_t utc_time;
+	utc_time = mktime(&jiesuan_date);
+	//cout << "utc " << utc_time << endl;
 
-				//ÒÀ¾İGPSÃë×ª»»ÄêÔÂÈÕ´æ´¢£¬Ôö¼Ó¿É¶ÁĞÔ
+	vector<long int> chazhi_time = this->chazhi_gpstime(jiesuan_date, 900);//è·å¾—è§£ç®—åŒºé—´
 
-				vector<string> newRow2;
-				newRow2.push_back(name1);
-				cout << "time " << gpsSeconds2Time(j)<<endl;
-				newRow2.push_back(gpsSeconds2Time(j));
-				newRow2.push_back(to_string(j));
-				newRow2.push_back(to_string(X));
-				newRow2.push_back(to_string(Y));
-				newRow2.push_back(to_string(Z));
-				WX_cz.push_back(newRow2);
-				i++;
 
-			}
+	vector<pair<int, int>> quyu = groupByWx_name(Weixing_jiesuan);
+	for (int i = 0; i < quyu.size(); i++) {
+		vector<double> X;
+		vector<double> Yx;
+		vector<double> Yy;
+		vector<double> Yz;
+
+		for (int j = 0; j < quyu[i].second - quyu[i].first; j++) {
+			X.push_back(stod(Weixing_jiesuan[quyu[i].first + j][1]));
+			Yx.push_back(stod(Weixing_jiesuan[quyu[i].first + j][2]));
+			Yy.push_back(stod(Weixing_jiesuan[quyu[i].first + j][3]));
+			Yz.push_back(stod(Weixing_jiesuan[quyu[i].first + j][4]));
+		}
+		for (int k = 0; k < chazhi_time.size(); k++) {
+			vector<string>suanzhi;
+			suanzhi.push_back(Weixing_jiesuan[quyu[i].first][0]);//å«æ˜Ÿåç§°
+			suanzhi.push_back(gpsSeconds2Time(chazhi_time[k]));
+			suanzhi.push_back(to_string(chazhi_time[k]));//gpsshijian
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yx, chazhi_time[k])));//ä¸‰ä¸ªåæ ‡
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yy, chazhi_time[k])));
+			suanzhi.push_back(to_string(lagrangeInterpolation(X, Yz, chazhi_time[k])));
+			WX_cz.push_back(suanzhi);
 		}
 
-	}
-		//½«½á¹û´æÈëÎÄ¼ş
+
+
 		ofstream out(path3);
-		out << "prn" << "," <<"time"<<"," << "gpstime" << "," << "X" << "," << "Y" << "," << "Z" << endl;
+		out << "prn" << "," << "time" << "," << "gpstime" << "," << "X" << "," << "Y" << "," << "Z" << endl;
 		for (auto row : WX_cz) {
 			for (auto cell : row) {
 				out << cell << ",";
@@ -334,7 +395,6 @@ void Satellites::lglrchazhi(string path2,string path3)
 		}
 		out.close();
 
-		cout << "ÒÑ½«ÅÅĞòºóµÄ½á¹û±£´æÔÚ"<<path3<<" ÎÄ¼şÖĞ¡£" << endl;
 
 		//for (const auto& row : WX_cz) {
 		//	for (const auto& col : row) {
@@ -342,7 +402,7 @@ void Satellites::lglrchazhi(string path2,string path3)
 		//	}
 		//	cout << endl;
 		//}
-
-		//
+	}
+	cout << "å·²å°†æ’åºåçš„ç»“æœä¿å­˜åœ¨" << path3 << " æ–‡ä»¶ä¸­ã€‚" << endl;
 
 }
