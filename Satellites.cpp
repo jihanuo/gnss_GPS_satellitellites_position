@@ -222,6 +222,7 @@ long double Satellites::getgpst(char c = 's')
 string Satellites::gpsSeconds2Time(long long gpsSeconds)
 {
 	//cout << "getw " << this->getgpst('s')<<endl;
+	//cout << gpsSeconds << " gpssceond" << endl;
 	time_t utcTime = gpsSeconds + this->getgpst('w') * 604800 + 315964800; // 转化为utc
 	struct tm utcTm = { 0 };
 	gmtime_s(&utcTm, &utcTime); // 将UTC时间转化为可读时间
@@ -231,17 +232,20 @@ string Satellites::gpsSeconds2Time(long long gpsSeconds)
 		utcTm.tm_hour, utcTm.tm_min, utcTm.tm_sec);
 
 	string timeStr(buffer);
+	//cout << buffer << endl;
 	return timeStr;
 }
 
 vector<long int> Satellites::chazhi_gpstime(struct tm& jiesuan_date, int seconds) {
 	vector<long int> gpstime;//
 	time_t utc_time;
-	utc_time = mktime(&jiesuan_date);
+	utc_time = mktime(&jiesuan_date);//此处使用的时间结构为地方时
 	//cout << "utc " << utc_time << endl;
 
 	for (int i = 0; i < (86400 / seconds); i++) {
 		gpstime.push_back((utc_time - 315964800) % 604800);
+
+		//cout << (utc_time - 315964800) % 604800 << "  ";
 		utc_time += seconds;
 	}
 	for (const auto& col : gpstime) {
