@@ -26,7 +26,7 @@ Satellites::Satellites(string path1, string path2, string path3, tm jiesuan_date
 
 	if (this->inFile && this->oFile)													// 若文件打开成功则继续下面操作	
 	{
-		cout << "开始读取数据" << endl;
+		cout << "读取广播星历数据···" << endl;
 		string s;												// 存放读取的每一行字符串
 		smatch m;												// 存放正则匹配到的元素
 		regex r("G\\d\\d.*|-?\\d.\\d{12}e[-+]\\d\\d");			// 正则匹配每个卫星单元
@@ -118,7 +118,7 @@ Satellites::Satellites(string path1, string path2, string path3, tm jiesuan_date
 		this->calData();		// 计算数据
 		this->wdata();			// 存储中间数据
 	}
-	cout << "正在计算" << endl;
+	cout << "正在计算数据，请稍等" << endl;
 	this->lglrchazhi(path2, path3, jiesuan_date);
 
 }

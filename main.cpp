@@ -6,6 +6,7 @@ using namespace std;
 
 int main()
 {
+	//传入卫星广播星历和解算时间参数
 	//string path1 = "..//资源文件//220225data.rnx";	 
 	FILE* fp;
 	std::string Data_relativePath = "\\data\\220225.rnx";//源数据
@@ -23,14 +24,13 @@ int main()
 	int shiqucha = 8;//这是本地时间减去格里尼治标准时间小时差，不同时区的用户需修改此值，此值为北京时间
 
 
+
+
 	//以下代码无需修改
-
-
-
 	tm jiesuan_date = { 0 };//定义解算日期,传入此处为北京时间，因此要加上8，转换为以utc时间整天 
 	jiesuan_date.tm_year = year - 1900;
 	jiesuan_date.tm_mon = month - 1;
-	jiesuan_date.tm_mday = 25;
+	jiesuan_date.tm_mday = day;
 	jiesuan_date.tm_hour = shiqucha;
 	jiesuan_date.tm_min = 0;
 	jiesuan_date.tm_sec = 0;
